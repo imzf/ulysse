@@ -42,6 +42,9 @@ config IOSCHED_ROW
 	  manner when the dispatch quantum for each queue is calculated
 	  according to queue priority.
 	  Most suitable for mobile devices.
+config IOSCHED_MAPLE
+	tristate "Maple I/O scheduler"
+	default y
 
 config IOSCHED_CFQ
 	tristate "CFQ I/O scheduler"
@@ -156,6 +159,8 @@ choice
 		  Dispatching is done in a RR manner when the dispatch quantum
 		  for each queue is defined according to queue priority.
 		  Most suitable for mobile devices.
+	config DEFAULT_MAPLE
+		bool "Maple" if IOSCHED_MAPLE=y
 
 	config DEFAULT_CFQ
 		bool "CFQ" if IOSCHED_CFQ=y
@@ -200,6 +205,7 @@ config DEFAULT_IOSCHED
 	string
 	default "deadline" if DEFAULT_DEADLINE
 	default "row" if DEFAULT_ROW
+	default "maple" if DEFAULT_MAPLE
 	default "cfq" if DEFAULT_CFQ
 	default "bfq" if DEFAULT_BFQ
 	default "noop" if DEFAULT_NOOP

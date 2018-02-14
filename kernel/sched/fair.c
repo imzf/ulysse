@@ -4762,8 +4762,8 @@ static void check_spread(struct cfs_rq *cfs_rq, struct sched_entity *se)
 #endif
 }
 
-static unsigned int Lgentle_fair_sleepers = 0;
-static unsigned int Larch_power = 0;
+unsigned int Lgentle_fair_sleepers = 1;
+unsigned int Larch_power = 0;
 
 void relay_gfs(unsigned int gfs)
 {
@@ -7974,7 +7974,7 @@ static void update_cpu_capacity(struct sched_domain *sd, int cpu)
 	struct sched_group *sdg = sd->groups;
 
 
-	if (sched_feat(ARCH_CAPACITY))
+	if (Larch_power)
 		capacity *= arch_scale_cpu_capacity(sd, cpu);
 	else
 		capacity *= default_scale_cpu_capacity(sd, cpu);
@@ -7984,7 +7984,7 @@ static void update_cpu_capacity(struct sched_domain *sd, int cpu)
 	sdg->sgc->capacity_orig = capacity;
 
 
-	if (sched_feat(ARCH_CAPACITY))
+	if (Larch_power)
 		capacity *= arch_scale_freq_capacity(sd, cpu);
 	else
 		capacity *= default_scale_capacity(sd, cpu);

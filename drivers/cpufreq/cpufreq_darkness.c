@@ -255,6 +255,7 @@ static void cpufreq_darkness_timer(unsigned long data)
 	unsigned long flags;
 	unsigned long max_cpu;
 	int i, fcpu;
+	bool display_on = is_display_on();
 
 	if (!down_read_trylock(&ppol->enable_sem))
 		return;
@@ -265,10 +266,10 @@ static void cpufreq_darkness_timer(unsigned long data)
 	spin_lock_irqsave(&ppol->load_lock, flags);
 	ppol->last_evaluated_jiffy = get_jiffies_64();
 
-	if (is_display_on() &&
+	if (display_on &&
 		tunables->timer_rate != tunables->timer_rate_prev)
 		tunables->timer_rate = tunables->timer_rate_prev;
-	else if (!is_display_on() &&
+	else if (!display_on &&
 		tunables->timer_rate != DEFAULT_TIMER_RATE_SUSP) {
 		tunables->timer_rate_prev = tunables->timer_rate;
 		tunables->timer_rate

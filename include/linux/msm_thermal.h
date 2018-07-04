@@ -165,6 +165,9 @@ extern int msm_thermal_get_cluster_freq_plan(uint32_t cluster,
 	unsigned int *table_ptr);
 extern int msm_thermal_get_cluster_voltage_plan(uint32_t cluster,
 	uint32_t *table_ptr);
+
+extern bool mitigation_thermal_core_control __read_mostly;
+
 /**
  * sensor_mgr_init_threshold - Initialize thresholds data structure for
  *                             sensor(s) with high and low thresholds and

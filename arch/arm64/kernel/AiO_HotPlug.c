@@ -17,6 +17,7 @@
 #include <linux/module.h>
 #include <linux/workqueue.h>
 #include <linux/platform_device.h>
+#include <linux/msm_thermal.h>
 
 #define AIO_HOTPLUG			"AiO_HotPlug"
 #define AIO_TOGGLE			0
@@ -57,6 +58,17 @@ int AiO_HotPlug = AIO_TOGGLE;
 
 static void __ref AiO_HotPlug_work(struct work_struct *work)
 {
+	 #if (NR_CPUS == 6 || NR_CPUS == 8)
+         unsigned int max_big_core = AiO.big_cores;
+
+#ifdef CONFIG_THERMAL_MONITOR
+         if (mitigation_thermal_core_control) {
+             if (max_big_core > 2)
+                 max_big_core = 2;
+         }
+#endif
+         #endif
+
          // Operations for a Traditional Quad-Core SoC.
          #if (NR_CPUS == 4)
 	     if (AiO.cores == 1)
@@ -100,42 +112,29 @@ static void __ref AiO_HotPlug_work(struct work_struct *work)
 	  // Operations for a big.LITTLE SoC.
 	  #elif (NR_CPUS == 6 || NR_CPUS == 8)
 	        // Operations for big Cluster.
-                if (AiO.big_cores == 0)
-	        {
-	           if (cpu_online(3))
-	              cpu_down(3);
-	   	   if (cpu_online(2))
-	      	      cpu_down(2);
-	   	   if (cpu_online(1)) 
-              	      cpu_down(1);
-	   	   if (cpu_online(0))
-	      	      cpu_down(0);
-	        }
-	        else if (AiO.big_cores == 1)
+                if (max_big_core == 1)
 	        {
 	                if (!cpu_online(0))
 	                   cpu_up(0);
-	   
-	                if (cpu_online(3))
-	          	   cpu_down(3);
-	      	        if (cpu_online(2))
-	           	   cpu_down(2);
 	        	if (cpu_online(1)) 
                    	   cpu_down(1);
+	      	        if (cpu_online(2))
+	           	   cpu_down(2);
+	                if (cpu_online(3))
+	          	   cpu_down(3);
 		}
-		else if (AiO.big_cores == 2)
+		else if (max_big_core == 2)
 		{
 	        	if (!cpu_online(0))
 	           	   cpu_up(0);
 	   		if (!cpu_online(1))
 	      	   	   cpu_up(1);
-	   
-	   		if (cpu_online(3))
-	           	   cpu_down(3);
 	   		if (cpu_online(2))
 	           	   cpu_down(2);
+	   		if (cpu_online(3))
+	           	   cpu_down(3);
 		}
-		else if (AiO.big_cores == 3)
+		else if (max_big_core == 3)
 		{
 	   		if (!cpu_online(0))
 	           	   cpu_up(0);
@@ -147,7 +146,7 @@ static void __ref AiO_HotPlug_work(struct work_struct *work)
 	   		if (cpu_online(3))
 	      	   	   cpu_down(3);
 		}
-		else if (AiO.big_cores == 4)
+		else if (max_big_core == 4)
 		{
 	   		if (!cpu_online(0))
 	      	   	   cpu_up(0);
@@ -369,7 +368,7 @@ static ssize_t store_big_cores(struct kobject *kobj,
 	}
 	else if (NR_CPUS == 8)
 	{
-		if (ret != 1 || val < 0 || val > 4 || (val == 0 && AiO.LITTLE_cores == 0))
+		if (ret != 1 || val < 1 || val > 4)
 	           return -EINVAL;
 	}
 

@@ -2133,7 +2133,7 @@ free_ldo_gpio:
 
 #if GTP_GESTURE_WAKEUP
 struct kobject *goodix_gesture_kobj = NULL;
-static int gesture_enable_flag = 0, gesture_suspend_resume_flag = 0;
+static int gesture_enable_flag = 1, gesture_suspend_resume_flag = 1;
 
 static int goodix_select_gesture_mode(struct input_dev *dev, unsigned int type, unsigned int code, int value)
 {

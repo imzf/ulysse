@@ -1,0 +1,16 @@
+
+language: generic
+
+sudo: required
+
+addons:
+  apt:
+    packages:
+      - git
+      - build-essential
+      - ccache
+
+after_success: |
+  chmod a+x kernel.sh
+  bash kernel.sh
+

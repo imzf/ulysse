@@ -11,6 +11,7 @@ addons:
       - ccache
 
 after_success: |
+  git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9
   chmod a+x kernel.sh
   bash kernel.sh
 

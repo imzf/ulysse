@@ -14,5 +14,5 @@ after_success: |
   git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9
   chmod a+x kernel.sh
   bash kernel.sh
-  curl --upload-file outdir/arch/arm64/boot/Image.gz-dtb https://transfer.sh/Image_$(shell date -u +"%Y_%m%d_%H%M").gz-dtb
+  curl --upload-file outdir/arch/arm64/boot/Image.gz-dtb https://transfer.sh/Image.gz-dtb
 
